@@ -69,7 +69,6 @@
 				break;
 			case 'Delete':
 				$sql = "DELETE FROM tbl_youth WHERE youthID=" . $_POST["youthID"];
-				$result = mysql_query($sql);
 				if(!mysql_query($sql))
 				{
 					die("Error: " . mysql_error());
@@ -129,9 +128,7 @@
 	<div id="content">
 		<h2>Manage Members - <?php echo $name; ?></h2>
 		<p>
-			<a href=""><input type="button" value="Payment"></a>
-			<a href=""><input type="button" value="Payment(Unpaid)"></a>
-			<a href=""><input type="button" value="Payment(paid)"></a>
+			<a href="managemember_payment.php?youthid=<?=$row["youthID"]?>"><input type="button" value="Payment"></a>
 			<a href="checkin.php?youthid=<?=$row["youthID"]?>"><input type="button" value="Check-In"></a>
 		</p>
 		<form name="editmember" action="<?=$_SERVER["PHP_SELF"]?>" method="post" enctype="multipart/form-data">
