@@ -1,19 +1,11 @@
 <?php
 	require_once("./include/session.php");
 	require_once("./include/function.php");
-	check_permission("ADMIN");
+	check_permission("MEM_PAYMENT");
 	
-	if($_POST)
+	if(!$_POST)
 	{
-		$sql = "INSERT INTO `tbl_youth_registration` (youthID,registration_date,fee,paid) VALUES ('$_POST[youthid]','" . dateformat2($_POST[date]) . "','$_POST[fee]','$_POST[paid]');";
-		if(!mysql_query($sql))
-		{
-			die("Error: " . mysql_error());
-		}
-		header("location:managemember_data.php?youthid=" . $_POST["youthid"]);
-	}
-	else
-	{
+		//load up the payment page
 		if($_GET)
 		{
 			$sql = "SELECT * FROM tbl_youth WHERE youthID =$_GET[youthid]";
@@ -22,9 +14,63 @@
 		}
 		else
 		{
-			echo "error";
+			echo "Error: No user selected.";
 			exit();
 		}
+	}
+	else
+	{
+		//check for previous payment
+		$sql = "
+				SELECT
+					*
+				FROM `tbl_youth` 
+				LEFT JOIN (
+					SELECT 
+						registrationid,
+						youthid, 
+						fee,
+						paid,
+						MAX(registration_date) AS registration_date 
+					FROM `tbl_youth_registration`
+					GROUP BY youthid
+					) AS table2
+				ON tbl_youth.youthid = table2.youthid 
+				WHERE 
+					registration_date + INTERVAL 1 YEAR  > now() AND 
+					tbl_youth.youthid = $_POST[youthid]";
+		$result = mysql_query($sql);
+		
+		//cancel payment if they already paid
+		if(mysql_num_rows($result) > 0)
+		{
+			echo "Has already Paid.";
+			exit();
+		}
+
+		//register payment	
+		$sql = "
+			INSERT INTO 
+				`tbl_youth_registration` 
+				(
+					youthID,
+					registration_date,
+					fee,
+					paid
+				)
+			VALUES 
+				(
+					'$_POST[youthid]',
+					'" . dateformat2($_POST[date]) . "',
+					'$_POST[fee]',
+					'$_POST[paid]'
+				);";
+		if(!mysql_query($sql))
+		{
+			die("Error: " . mysql_error());
+		}
+		log_event("MEM_PAYMENT",$_SESSION["userid"],$_POST["youthid"]);
+		header("location:managemember_data.php?youthid=" . $_POST["youthid"]);
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"

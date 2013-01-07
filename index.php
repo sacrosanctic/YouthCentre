@@ -1,4 +1,5 @@
 <?php
+	require_once("./include/dbconnect.php");
 	session_start();
 	if($_POST)
 	{

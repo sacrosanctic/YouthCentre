@@ -1,7 +1,9 @@
 <?php
 	require_once("./include/session.php");
 	require_once("./include/function.php");
-	check_permission("ADMIN");
+	check_permission("MEM_VIEW");
+
+	log_event("MEM_SEARCH",$_SESSION["userid"],-1,$_POST["search"]);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -19,7 +21,7 @@
 	<?php require_once("./include/nav.php"); ?>
 	<div id="content">
 		<h2>Manage Members - Search "<?php echo $_POST["search"]; ?>"</h2>
-		<form action="managemember_search.php" method="post">
+		<form action="<?=$_SERVER["PHP_SELF"]?>" method="post">
 		<input type="text" name="search" value="<?php echo $_POST["search"]; ?>"><input type="submit" value="Search">
 		</form><br />
 		<?php
@@ -30,8 +32,8 @@
 					l_name
 				FROM `tbl_youth` 
 				WHERE 
-					concat(f_name,' ',l_name)
-					like '%" . $_POST["search"] . "%'
+					concat(f_name,' ',l_name) like '%" . $_POST["search"] . "%' AND
+					tbl_youth.delete=0
 				ORDER BY
 					f_name,
 					l_name

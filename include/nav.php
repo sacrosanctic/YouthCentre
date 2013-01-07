@@ -4,5 +4,6 @@
 	<a href="report.php">Reports</a>
 	<a href="manageuser.php">User Accounts</a>
 	<a href="logout.php">Logout</a>
+	<?="Login as: " . (isset($_SESSION["user"]) ? $_SESSION["user"] : "Guest") . ".";?>
 	<hr />
 </div> <!-- End of #nav -->

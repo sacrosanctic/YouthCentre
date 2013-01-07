@@ -1,7 +1,7 @@
 <?php
 	require_once("./include/session.php");
 	require_once("./include/function.php");
-	check_permission("ADMIN");
+	check_permission("MEM_VIEW");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -20,7 +20,7 @@
 	<div id="content">
 		<H2>Manage Members - Full List</h2>
 		<?php
-			$sql = "SELECT * FROM tbl_youth ORDER BY f_name;";
+			$sql = "SELECT * FROM tbl_youth WHERE tbl_youth.delete=0 ORDER BY f_name;";
 			$result = mysql_query($sql);
 			$i = 0;
 			echo "<p>";

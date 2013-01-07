@@ -1,7 +1,7 @@
 <?php
 	require_once("./include/session.php");
 	require_once("./include/function.php");
-	check_permission("ADMIN");
+	check_permission("MEM_EDIT");
 
 	if($_POST["first"] == "" || $_POST["last"] == "")
 	{
@@ -17,6 +17,7 @@
 	$result = mysql_query($sql);
 	$row = mysql_fetch_array($result);
 	$ID = $row[0];
+	log_event("MEM_ADD",$_SESSION["userid"],$ID);
 	header("location:managemember_data.php?youthid=$ID");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"

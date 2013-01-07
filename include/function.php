@@ -57,4 +57,35 @@
 			exit();
 		}
 	}
+	function log_error()
+	{}
+	function log_event($event,$userid,$youthid,$note="")
+	{
+		//$userid = 0
+		//$youthid = 0
+		//$event = 
+		//$success = true|false
+		$sql = "
+			INSERT INTO
+				`tbl_user_activity`
+				(
+					userID,
+					timestamp,
+					youthID,
+					activity_type,
+					note
+				)
+			VALUES
+				(
+					$userid,
+					NOW(),
+					$youthid,
+					'$event',
+					'$note'
+				);";
+		if(!mysql_query($sql))
+		{
+			die("Error: " . mysql_error());
+		}
+	}
 ?>

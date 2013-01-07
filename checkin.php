@@ -1,18 +1,56 @@
 <?php
 	require_once("./include/session.php");
 	require_once("./include/function.php");
-	check_permission("ADMIN");
+	check_permission("CHECK_IN");
 	
 	if($_GET)
 	{
 		if(!empty($_GET["youthid"]))
 		{
-			$sql = "INSERT INTO `tbl_youth_time_sheet`(youthID,time_in) VALUES ('" . $_GET["youthid"] . "',NOW());";
-			if(!mysql_query($sql))
+			$message = "";
+			//check for valid membership
+			$sql = "
+				SELECT
+					MAX(registration_date)
+				FROM
+					tbl_youth
+					INNER JOIN tbl_youth_registration
+					ON tbl_youth.youthid = tbl_youth_registration.youthid
+				WHERE
+					tbl_youth.youthid = $_GET[youthid] AND 
+					registration_date + INTERVAL 1 YEAR  > now() AND 
+					tbl_youth.delete = 0 
+				GROUP BY 
+					registration_date";
+			$result = mysql_query($sql);
+			if(mysql_num_rows($result) == 0)
 			{
-				die('Error: ' . mysql_error());
+				$message = "Invalid Membership.";
 			}
-			$message = "success!";
+			else
+			{
+				//check for double tap
+				$sql = "SELECT * FROM tbl_youth_time_sheet WHERE youthid = $_GET[youthid] AND date(time_in)=date(now())";
+				$result = mysql_query($sql);
+				if(mysql_num_rows($result) > 0)
+				{
+					$message = "already checked in.";
+				}
+				else
+				{
+					//register as checked in
+					$sql = "INSERT INTO `tbl_youth_time_sheet`(youthID,time_in) VALUES ('" . $_GET["youthid"] . "',NOW());";
+					if(!mysql_query($sql))
+					{
+						die('Error: ' . mysql_error());
+					}
+					$sql = "SELECT * FROM tbl_youth WHERE youthID =$_GET[youthid]";
+					$result = mysql_query($sql);
+					$row = mysql_fetch_array($result);
+					$message = "$row[f_name] $row[l_name] has been checked in.";
+					log_event("CHECK_IN",$_SESSION["userid"],$_GET["youthid"]);
+				}
+			}
 		}
 	}
 ?>

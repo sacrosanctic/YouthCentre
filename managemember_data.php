@@ -1,10 +1,27 @@
 <?php
 	require_once("./include/session.php");
 	require_once("./include/function.php");
-	check_permission("ADMIN");
+	check_permission("MEM_VIEW");
 
-	if($_POST)
+	if(!$_POST)
 	{
+		if($_GET)
+		{
+			$sql = "SELECT * FROM tbl_youth WHERE youthID=$_GET[youthid];";
+			$result = mysql_query($sql);
+			$row = mysql_fetch_array($result);
+			$name = $row["f_name"] . " " . $row["l_name"];
+			log_event("MEM_VIEW",$_SESSION["userid"],$_GET["youthid"]);
+		}
+		else
+		{
+			echo "missing Youth ID.";
+			exit;
+		}
+	}
+	else
+	{
+		check_permission("MEM_EDIT");
 		$photo = "./photo/" . $_POST["youthID"] . ".jpg";
 		switch ($_POST['submit']) {
 			case 'Save':
@@ -65,32 +82,18 @@
 				{
 					die('Error: ' . mysql_error());
 				}
+				log_event("MEM_EDIT",$_SESSION["userid"],$_POST["youthID"]);
 				header("location:managemember_data.php?youthid=" . make_safe($_POST['youthID']));
 				break;
 			case 'Delete':
-				$sql = "DELETE FROM tbl_youth WHERE youthID=" . $_POST["youthID"];
+				$sql = "UPDATE tbl_youth SET tbl_youth.delete=1 WHERE youthID=" . $_POST["youthID"];
 				if(!mysql_query($sql))
 				{
 					die("Error: " . mysql_error());
 				}
-				unlink($photo);
+				log_event("MEM_DEL",$_SESSION["userid"],$_POST["youthID"]);
 				header("location:managemember.php");
 				break;
-		}
-	}
-	else
-	{
-		if($_GET)
-		{
-			$sql = "SELECT * FROM tbl_youth WHERE youthID=$_GET[youthid];";
-			$result = mysql_query($sql);
-			$row = mysql_fetch_array($result);
-			$name = $row["f_name"] . " " . $row["l_name"];
-		}
-		else
-		{
-			echo "missing Youth ID.";
-			exit;
 		}
 	}
 ?>
