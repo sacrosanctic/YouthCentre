@@ -45,10 +45,6 @@
 	<script type="text/javascript" language="JavaScript">
 	</script>
 	<style type="text/css">
-	div label.block
-	{
-		display:block;
-	}
 	</style>
 </head>
 <body>
@@ -59,8 +55,8 @@
 		<h2>User Accounts</h2>
 		<h3>New User</h3>
 		<?=$message?>
-		<form action="<?=$_SERVER["PHP_SELF"];?>" method="post">
-		<input type="submit" value="Create"  onclick='return verify()'>
+		<form action="<?=$_SERVER["PHP_SELF"];?>" method="post" class="frmuser">
+		<input type="submit" value="Create" />
 		<label for="username" class="block">Name:</label><input type="text" name="username" />
 		<label for="password" class="block">Password:</label><input type="password" name="password" />
 		<label for="password2" class="block">Re-Enter Password:</label><input type="password" name="password2" />
@@ -96,8 +92,7 @@
 			while($row = mysql_fetch_array($result))
 			{
 				$i++;
-				//echo '<a href="manageuser_data.php?userid=' . $row["userID"] . '">';
-				echo '<a href="./">';
+				echo '<a href="manageuser_data.php?userid=' . $row["userID"] . '">';
 				echo "$row[username]";
 				echo '</a>';
 				echo ($i%10 == 0 ? "</p><p>" : " | " );

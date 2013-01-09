@@ -12,6 +12,35 @@
 			$row = mysql_fetch_array($result);
 			$name = $row["f_name"] . " " . $row["l_name"];
 			log_event("MEM_VIEW",$_SESSION["userid"],$_GET["youthid"]);
+
+			//check weather this member has paid
+			$sql = "
+				SELECT
+					*
+				FROM `tbl_youth` 
+				LEFT JOIN (
+					SELECT 
+						registrationid,
+						youthid, 
+						fee,
+						paid,
+						MAX(registration_date) AS registration_date 
+					FROM `tbl_youth_registration`
+					GROUP BY youthid
+					) AS table2
+				ON tbl_youth.youthid = table2.youthid 
+				WHERE 
+					registration_date + INTERVAL 1 YEAR  > now() AND 
+					tbl_youth.youthid = $_GET[youthid]";
+			$result = mysql_query($sql);
+			if(mysql_num_rows($result) == 1)
+			{
+				$paid = true;
+			}
+			else
+			{
+				$paid = false;
+			}
 		}
 		else
 		{
@@ -133,6 +162,9 @@
 		<p>
 			<a href="managemember_payment.php?youthid=<?=$row["youthID"]?>"><input type="button" value="Payment"></a>
 			<a href="checkin.php?youthid=<?=$row["youthID"]?>"><input type="button" value="Check-In"></a>
+		</p>
+		<p>
+			Status: <?=($paid?"Paid":"Unpaid");?>
 		</p>
 		<form name="editmember" action="<?=$_SERVER["PHP_SELF"]?>" method="post" enctype="multipart/form-data">
 			<input type="submit" name="submit" value="Save">
