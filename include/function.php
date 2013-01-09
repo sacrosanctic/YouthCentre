@@ -73,7 +73,8 @@
 					timestamp,
 					youthID,
 					activity_type,
-					note
+					note,
+					execution_code
 				)
 			VALUES
 				(
@@ -81,7 +82,8 @@
 					NOW(),
 					$youthid,
 					'$event',
-					'$note'
+					'$note',
+					''
 				);";
 		if(!mysql_query($sql))
 		{

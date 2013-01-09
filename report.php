@@ -21,7 +21,7 @@
 	<?php require_once("./include/nav.php"); ?>
 	<div id="content">
 		<h2>Report</h2>
-		Current Actice Members:
+		Current Active Members:
 		<?php
 			$sql = "
 				SELECT

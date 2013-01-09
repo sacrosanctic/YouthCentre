@@ -96,7 +96,8 @@
 			while($row = mysql_fetch_array($result))
 			{
 				$i++;
-				echo '<a href="manageuser_data.php?userid=' . $row["userID"] . '">';
+				//echo '<a href="manageuser_data.php?userid=' . $row["userID"] . '">';
+				echo '<a href="./">';
 				echo "$row[username]";
 				echo '</a>';
 				echo ($i%10 == 0 ? "</p><p>" : " | " );
