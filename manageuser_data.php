@@ -92,7 +92,7 @@
 		<input type="checkbox" id="perm5" name="perm5" value="REPORT_VIEW"<?=(strpos($row["user_type"],"REPORT_VIEW") === false ? "" : " checked=checked");?> /><label for="perm5">Report View</label>
 		</td></tr>
 		<tr><td>
-		<input type="checkbox" id="perm6" name="perm6" value="ADMIN" checked=checked  <?=(strpos($row["user_type"],"ADMIN") === false ? "" : " checked=checked");?>/><label for="perm6">ADMIN</label>
+		<input type="checkbox" id="perm6" name="perm6" value="ADMIN"<?=(strpos($row["user_type"],"ADMIN") === false ? "" : " checked=checked");?>/><label for="perm6">ADMIN</label>
 		</td></tr></table>
 		</fieldset>
 		</form>
