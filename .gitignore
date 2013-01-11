@@ -1,2 +1,2 @@
-./include/salt.txt
-./include/dbconnect.php
+include/salt.txt
+include/dbconnect.php
