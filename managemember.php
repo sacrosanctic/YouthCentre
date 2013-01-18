@@ -9,6 +9,12 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="css/default.css" />
 	<script type="text/javascript" language="JavaScript">
+	function youthidsearch()
+	{
+		var youthid = document.getElementById("idsearch").value;
+		parent.location = "managemember_data.php?youthid=" + youthid;
+		return false;
+	}
 	</script>
 	<style type="text/css">
 	</style>
@@ -25,9 +31,12 @@
 		</form>
 		<h3>Member Look-Up</h3>
 		<form action="managemember_search.php" method="post">
-		<input type="text" name="search"><input type="submit" value="Search">
+		Name: <input type="text" name="search"><input type="submit" value="Search">
 		</form>
+		<form action="managemember_data.php" method="get">
+		Youth ID: <input type="text" name="youthid" /><input type="submit" value="Search">
 		<h3>Full List</h3>
+		</form>
 		<a href="managemember_fulllist.php">link</a>
 	</div>
 	<?php require_once("./include/footer.php"); ?>
