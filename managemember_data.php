@@ -162,6 +162,7 @@
 		<p>
 			<a href="managemember_payment.php?youthid=<?=$row["youthID"]?>"><input type="button" value="Payment"></a>
 			<a href="checkin.php?youthid=<?=$row["youthID"]?>"><input type="button" value="Check-In"></a>
+			<a href="managemember_form.php?youthid=<?=$row["youthID"]?>" target="_blank"><input type="button" value="Print"></a>
 		</p>
 		<p>
 			Status: <?=($paid?"Paid":"Unpaid");?>
