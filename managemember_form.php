@@ -15,6 +15,7 @@
 		$sql = "
 			SELECT
 				*,
+				DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(birthdate, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(birthdate, '00-%m-%d')) AS age,
 				UPPER(DATE_FORMAT(birthdate,'%d/%b/%Y')) AS birthdate,
 				CONCAT(f_name , ' ' , l_name) AS fullname
 			FROM 
@@ -25,10 +26,9 @@
 		$row = mysql_fetch_array($result);
 	}
 	
-	//Label Width
-	$lw = 40;
-	//Line Height
-	$lh = 5;
+	//Text Height
+	$th = 6;
+	$border = 0;
 	
 	$pdf = new FPDF('P','mm','Letter');
 	$pdf->AddPage();
@@ -36,142 +36,70 @@
 	$pdf->SetTitle('Registration Form - Youth');
 	$pdf->SetCreator('Youth Centre Database');
 	$pdf->SetAuthor('Collingwood Youth Services');
-	$pdf->Image('./images/test.jpg',23,null,164);
-	$pdf->SetFont('Arial','B',24);
-	$pdf->Cell(0,5,'CNH Youth Drop-In',0,1,'C');
-	$pdf->Ln(2);
-	$pdf->SetFont('Arial','B',16);
-	$pdf->Cell(0,5,'Registration Form',0,1,'C');
-	$pdf->Ln(10);
-	//end of title
-	//start of info
-	$topy = 30;
-	$pdf->SetLeftMargin(20.00125);
-	$pdf->SetXY(20.00125,$topy);
-	$pdf->Cell(0,5,'Personal Information');
-	$pdf->Ln(10);
-	$pdf->SetFont('Arial','',10);
-	$pdf->Cell($lw,5,'Name:');
-	$pdf->Cell($lw,5,$row['fullname']);
-	$pdf->Ln($lh);
-	$pdf->Cell($lw,5,'Gender:');
-	$pdf->Cell($lw,5,$row['gender']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Date of Birth:');
-	$pdf->Cell($lw,5,$row['birthdate']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Address:');
-	$pdf->Cell($lw,5,$row['address']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'City:');
-	$pdf->Cell($lw,5,$row['city']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Postal Code:');
-	$pdf->Cell($lw,5,$row['postal_code']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Home Phone:');
-	$pdf->Cell($lw,5,$row['home']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Applicant\'s Cell Phone:');
-	$pdf->Cell($lw,5,$row['cell']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'E-mail:');
-	$pdf->Cell($lw,5,$row['email']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'School Attending:');
-	$pdf->Cell($lw,5,$row['school']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Grade:');
-	$pdf->Cell($lw,5,$row['grade']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Parent/Guardian name:');
-	$pdf->Cell($lw,5,$row['parent']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Mobile/Work:');
-	$pdf->Cell($lw,5,$row['parent_num']);
-	$pdf->Ln(10);
-	$pdf->SetLeftMargin(20.00125+100);
-	$pdf->SetXY(20.00125+100,$topy);
-	$pdf->SetFont('Arial','B',16);
-	$pdf->Cell(0,5,'Emergency Contact');
-	$pdf->SetFont('Arial','',10);
-	$pdf->Ln(10);
-	$pdf->Cell($lw,5,'Name (FIRST, LAST):');
-	$pdf->Cell($lw,5,$row['ec_name']);
-	$pdf->Ln($lh);
-	$pdf->Cell($lw,5,'Phone Number:');
-	$pdf->Cell($lw,5,$row['ec_num']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Relationship:');
-	$pdf->Cell($lw,5,$row['ec_relationship']);
-	$pdf->Ln(10);
-	$pdf->SetFont('Arial','B',16);
-	$pdf->Cell($lw,5,'Medical Information');
-	$pdf->Ln(10);
-	$pdf->SetFont('Arial','',10);
-	$pdf->Cell($lw,5,'Care Card Number:');
-	$pdf->Cell($lw,5,$row['care_card']);
-	$pdf->Ln($lh);
-	$pdf->Cell($lw,5,'Doctor\'s Name:');
-	$pdf->Cell($lw,5,$row['doctor']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Phone Number:');
-	$pdf->Cell($lw,5,$row['doctor_num']);
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Allergies and');
-	$pdf->Ln();
-	$pdf->Cell($lw,5,'Medical Concerns:');
-	$pdf->MultiCell(0,5,$row['allergy'],0,'L');
-	//end of info
-	$pdf->SetLeftMargin(10.00125);
-	$pdf->SetXY(10.00125,110.00125);
-	$pdf->SetFont('Arial','B',16);
-	$pdf->Cell($lw,5,'Parent/Guardian Agreement',0,1,'L');
-	$pdf->SetFont('Arial','',10);
-	$pdf->Ln(5);
-	$pdf->write(5,'I,______________________________, the parent/guardian, give permission for my son/daughter, ______________________________, to participate in various CNH Youth Drop-In and Recreational Programs. I understand that there exists an element of person injury in attending these programs. I willingly assume these risk and waive Collingwood Neighbourhood House of any and all liability in regards to any resulting injury(s) as a condition of my child\'s participation. I am aware that my child may leave the premises as they choose and that Youth will only be supervised while in the building. I am also aware that my child may, at any time, be asked to leave the premise in the event of serious misconduct. I understand that pictures may be taken of my child while participating in programs and allow Collingwood Neighbourhood House to use these pictures as both promotional material and for identification purposes.');
-	$pdf->Ln();
-	$pdf->Cell(0,5,'Parent/Guardian Signature:______________________________');
-	$pdf->Cell(0,5,'Date:______________________________',0,1,'R');
-	$pdf->Ln();
-	$pdf->SetFont('Arial','B',16);
-	$pdf->Cell($lw,5,'Youth Agreement',0,1,'L');
-	$pdf->SetFont('Arial','',10);
-	$pdf->Ln(5);
-	$pdf->write(5,'!,______________________________, understand that while participating in CNH Youth Programs I must follow the following rules: 1) Respec for Staff, Volunteers and Other Youth; 2) Respect for the Building and Equipment; 3) No Swearing, Fighting, Bullying or Intimidation; 4) Clean Up After Yourself; 5) Absolutely NO Alcohol, Drugs or Possession of Illegal or sexually explicit Materials. I also understand that any violation of these rules may result in me being sent home and further violations may mean that I no longer can attend any of the youth programs at CNH. (Youth are always welcome to book an appointment with staff to discuss any issues outside of Youth Centre hours.');
-	$pdf->Ln();
-	$pdf->Cell(0,5,'Youth Signature:______________________________');
-	$pdf->Cell(0,5,'Date:______________________________',0,1,'R');
-	$pdf->Ln();
-	$pdf->SetXY(10.00125,220.00125);
-	$pdf->SetFont('Arial','B',16);
-	$pdf->Cell(0,5,'For Office Use Only',0,1,'C');
-	$pdf->SetFont('Arial','',12);
-	$pdf->Ln(2);
-	$pdf->Rect(10,218,195,42);
-	$lw2 = 80;
-	$linelength = 6.5;
-	$pdf->Cell(50,5,'Membership Card:');
-	$pdf->Cell(30,5,'_____');
-	$pdf->Cell(35,5,'Registration Date:');
-	$pdf->Cell(0,5,'_________________________');
-	$pdf->Ln($linelength);
-	$pdf->Cell(50,5,'Annual Fee:');
-	$pdf->Cell(30,5,'_____');
-	$pdf->Cell(35,5,'Collected by:');
-	$pdf->Cell(0,5,'_________________________');
-	$pdf->Ln($linelength);
-	$pdf->Cell(50,5,'Form Completion:');
-	$pdf->Cell(30,5,'_____');
-	$pdf->Cell(35,5,'Phone Verification:');
-	$pdf->Cell(0,5,'_________________________');
-	$pdf->Ln($linelength);
-	$pdf->Cell(26,5,'Comments:');
-	$pdf->Cell(0,5,'_______________________________________________________________');
-	$pdf->Ln($linelength);
-	$pdf->Cell(50,5,'Member ID:');
-	$pdf->Cell(30,5,'_____');
-	$pdf->Cell(35,5,'Database Date:');
-	$pdf->Cell($lw2,5,'_________________________');
+	$pdf->SetFont('Arial','',14);
+	//start of page one
+	$pdf->Image('./images/form_p1_v3.6.jpg',0,0,215.9);
+	$pdf->SetXY(65,86);
+	$pdf->Cell(95,$th,$row['fullname'],$border,0,'C');
+	switch ($row['gender'])
+	{
+		case 'Male': 
+			$pdf->SetXY(165,86);
+			$pdf->Cell(4.5,$th,'',1,0,'C');
+			break;
+		case 'Female': 
+			$pdf->SetXY(172,86);
+			$pdf->Cell(4.5,$th,'',1,0,'C');
+			break;
+		default: 
+			break;
+	}
+	$pdf->SetXY(83,95);
+	$pdf->Cell(53,$th,$row['birthdate'],$border,0,'C');
+	$pdf->SetXY(156,95);
+	$pdf->Cell(32,$th,$row['age'],$border,0,'C');
+	$pdf->SetXY(49,105);
+	$pdf->Cell(141,$th,$row['address'],$border,0,'C');
+	$pdf->SetXY(42,114);
+	$pdf->Cell(76,$th,$row['city'],$border,0,'C');
+	$pdf->SetXY(162,114);
+	$pdf->Cell(28,$th,$row['postal_code'],$border,0,'C');
+	$pdf->SetXY(58,123);
+	$pdf->Cell(43,$th,$row['home'],$border,0,'C');
+	$pdf->SetXY(145,123);
+	$pdf->Cell(43,$th,$row['cell'],$border,0,'C');
+	$pdf->SetXY(61,132.5);
+	$pdf->Cell(129,$th,$row['email'],$border,0,'C');
+	$pdf->SetXY(66,142);
+	$pdf->Cell(58,$th,$row['school'],$border,0,'C');
+	$pdf->SetXY(149,142);
+	$pdf->Cell(41,$th,$row['grade'],$border,0,'C');
+	$pdf->SetXY(77,151);
+	$pdf->Cell(49,$th,$row['parent'],$border,0,'C');
+	$pdf->SetXY(155,151);
+	$pdf->Cell(37,$th,$row['parent_num'],$border,0,'C');
+	$pdf->SetXY(64,170);
+	$pdf->Cell(123,$th,$row['ec_name'],$border,0,'C');
+	$pdf->SetXY(53,179);
+	$pdf->Cell(43,$th,$row['ec_num'],$border,0,'C');
+	$pdf->SetXY(125,179);
+	$pdf->Cell(60,$th,$row['ec_relationship'],$border,0,'C');
+	$pdf->SetXY(67,200);
+	$pdf->Cell(53,$th,$row['care_card'],$border,0,'C');
+	$pdf->SetXY(60,207);
+	$pdf->Cell(42,$th,$row['doctor'],$border,0,'C');
+	$pdf->SetXY(125,207);
+	$pdf->Cell(43,$th,$row['doctor_num'],$border,0,'C');
+	$pdf->SetXY(90,214.6);
+	$pdf->Cell(101,$th,$row['allergy'],$border,0,'C');
+	$pdf->addpage();
+	//start of page 2
+	$pdf->Image('./images/form_p2_v3.6.jpg',0,0,215.9);
+	$pdf->SetXY(36,106.5);
+	$pdf->Cell(58,$th,$row['fullname'],$border,0,'C');
+	$pdf->SetXY(169,208.5);
+	$pdf->Cell(21,$th,$row['youthID'],$border,0,'C');
+	$pdf->SetXY(123,219);
+	$pdf->Cell(67,$th,$row['creation_date'],$border,0,'C');
 	$pdf->Output('test.pdf','I');
 ?>
